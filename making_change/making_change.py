@@ -3,33 +3,31 @@
 import sys
 
 def making_change(amount, denominations):
+    cache = {x: 0 for x in range(amount + 1)} #+1 so that the values can be referenced based on their exact value; otherwise when referencing 370 you would have to use cache[369]
+    cache[0] = 1 #set to 1 because not giving change counts as one way. LOL.
+    print(cache)
+    for coin in denominations:
+    #for every coin, go through and tally how many ways 
+    #it can make change for the amount of change
+    
+        for higher_amount in range(coin, amount + 1): 
+        #A coin can only make change for an amount higher than it,
+        #so start from the coin's value.
+        #The goal is to count the total number of coin combinations
+        #for EACH amount of change between 0 and the total amount.
+        #This will allow you to simply add all of the different combinations
+        #together in order to get the final number of combos for the total
+        #amount
+            diff = higher_amount - coin
+            #subtracting the coin's value from the value of the 
+            #of the current amount of change will allow you to reference
+            #back to the last number you discovered with all of the combinations
+            #for with the coin and just add that number of combinations to the
+            # current number. 
+            cache[higher_amount] += cache[diff]
 
-    ways = 0
-    way_pairs = {}
-    if amount == 0:
-      return 0
-    for value in denominations:
-        way_pairs[value] = []
-        if amount % value == 0:
-          way_pairs[value] = [value]
-          """ print("Single denom:",value) """
-          ways += 1
-
-    for i in range(len(denominations)-1, -1, -1):
-         
-         """ print(denominations[i]) """
-         for value in denominations:
-             """ print("Values:", denominations[i], value) """
-             if denominations[i] == amount:
-                pass 
-             elif amount - denominations[i] < 0:
-                pass
-             elif (amount - denominations[i]) % value == 0:
-                if not value in way_pairs[denominations[i]]:
-                    way_pairs[denominations[i]].append(value)
-                    ways += 1
-    print(747 % 38)          
-    return ways
+    print(cache)
+    return cache[amount]
 
 
 if __name__ == "__main__":
